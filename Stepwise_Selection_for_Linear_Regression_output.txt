@@ -1,0 +1,710 @@
+                              
+> lapply(myData[-1], var, na.rm = TRUE) != 0
+              FIRST_PAYMENT_DATE        FIRST_TIME_HOMEBUYER_FLAG                    MATURITY_DATE                              MSA 
+                            TRUE                             TRUE                             TRUE                             TRUE 
+  MORTAGAGE_INSURANCE_PERCENTAGE                  NUMBER_OF_UNITS                 OCCUPANCY_STATUS   ORGINAL_COMBINED_LOAN_TO_VALUE 
+                            TRUE                             TRUE                             TRUE                             TRUE 
+   ORIGINAL_DEBT_TO_INCOME_RATIO                     ORIGINAL_UPB           ORIGINAL_LOAN_TO_VALUE           ORIGINAL_INTEREST_RATE 
+                            TRUE                             TRUE                             TRUE                             TRUE 
+                         CHANNEL PREPAYMENT_PENALTY_MORTGAGE_FLAG                     PRODUCT_TYPE                   PROPERTY_STATE 
+                            TRUE                             TRUE                            FALSE                             TRUE 
+                   PROPERTY_TYPE                      POSTAL_CODE             LOAN_SEQUENCE_NUMBER                     LOAN_PURPOSE 
+                            TRUE                             TRUE                             TRUE                             TRUE 
+              ORIGINAL_LOAN_TERM              NUMBER_OF_BORROWERS                      SELLER_NAME                    SERVICER_NAME 
+                            TRUE                             TRUE                             TRUE                             TRUE 
+           SUPER_CONFORMING_FLAG                             <NA> 
+                            TRUE                             TRUE 
+There were 13 warnings (use warnings() to see them)
+> myData <- Filter(function(x)(length(unique(x))>1), myData)
+> min.model <- lm(ORIGINAL_INTEREST_RATE ~ 1, data=myData)
+> fwd.model <- step(min.model, direction = "both", scope = (~ CREDIT_SCORE+
++                                                                FIRST_PAYMENT_DATE+
++                                                                FIRST_TIME_HOMEBUYER_FLAG+
++                                                                MATURITY_DATE+
++                                                                MSA+
++                                                                MORTAGAGE_INSURANCE_PERCENTAGE+
++                                                                NUMBER_OF_UNITS+
++                                                                OCCUPANCY_STATUS+
++                                                                ORGINAL_COMBINED_LOAN_TO_VALUE+
++                                                                ORIGINAL_DEBT_TO_INCOME_RATIO+
++                                                                ORIGINAL_UPB+
++                                                                ORIGINAL_LOAN_TO_VALUE+
++                                                                ORIGINAL_INTEREST_RATE+
++                                                                CHANNEL+
++                                                                PREPAYMENT_PENALTY_MORTGAGE_FLAG+
++                                                                # PRODUCT_TYPE+
++                                                                PROPERTY_STATE+
++                                                                PROPERTY_TYPE+
++                                                                POSTAL_CODE+
++                                                                # LOAN_SEQUENCE_NUMBER+
++                                                                LOAN_PURPOSE+
++                                                                ORIGINAL_LOAN_TERM+
++                                                                NUMBER_OF_BORROWERS+
++                                                                SELLER_NAME+
++                                                                SERVICER_NAME+
++                                                                SUPER_CONFORMING_FLAG))
+Start:  AIC=-14295.83
+ORIGINAL_INTEREST_RATE ~ 1
+
+                                    Df Sum of Sq    RSS    AIC
++ ORIGINAL_LOAN_TERM                 1    675.43 1089.0 -18570
++ MATURITY_DATE                      1    674.48 1089.9 -18562
++ OCCUPANCY_STATUS                   2    173.83 1590.5 -15211
++ CREDIT_SCORE                     213    188.69 1575.7 -14872
++ LOAN_PURPOSE                       2    103.28 1661.1 -14826
++ ORIGINAL_LOAN_TO_VALUE             1     91.48 1672.9 -14766
++ ORGINAL_COMBINED_LOAN_TO_VALUE     1     90.00 1674.4 -14758
++ SERVICER_NAME                     18     51.54 1712.8 -14522
++ SUPER_CONFORMING_FLAG             18     46.41 1718.0 -14496
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     35.69 1728.7 -14475
++ PROPERTY_STATE                    51     50.09 1714.3 -14449
++ FIRST_PAYMENT_DATE                 1     30.37 1734.0 -14448
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     29.06 1735.3 -14441
++ SELLER_NAME                       17     35.14 1729.2 -14440
++ NUMBER_OF_UNITS                    1     23.93 1740.5 -14415
++ FIRST_TIME_HOMEBUYER_FLAG          2     11.32 1753.1 -14349
++ ORIGINAL_UPB                       1      3.95 1760.4 -14314
++ POSTAL_CODE                        1      3.81 1760.6 -14313
++ PROPERTY_TYPE                      5      4.64 1759.7 -14309
++ NUMBER_OF_BORROWERS                1      2.74 1761.6 -14308
+<none>                                           1764.4 -14296
++ MSA                                1      0.15 1764.2 -14295
++ CHANNEL                            2      0.49 1763.9 -14294
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1      0.00 1764.4 -14294
+
+Step:  AIC=-18569.55
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM
+
+                                    Df Sum of Sq     RSS    AIC
++ OCCUPANCY_STATUS                   2    177.87  911.07 -20146
++ CREDIT_SCORE                     213    150.97  937.97 -19466
++ LOAN_PURPOSE                       2     59.82 1029.13 -19066
++ ORIGINAL_UPB                       1     40.25 1048.69 -18901
++ SERVICER_NAME                     18     37.60 1051.35 -18845
++ FIRST_PAYMENT_DATE                 1     31.92 1057.03 -18831
++ MATURITY_DATE                      1     31.83 1057.12 -18830
++ SUPER_CONFORMING_FLAG             18     33.82 1055.12 -18813
++ FIRST_TIME_HOMEBUYER_FLAG          2     28.69 1060.26 -18802
++ SELLER_NAME                       17     26.85 1062.10 -18757
++ NUMBER_OF_UNITS                    1     21.99 1066.95 -18748
++ PROPERTY_STATE                    51     26.52 1062.43 -18686
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1      7.32 1081.63 -18627
++ ORIGINAL_LOAN_TO_VALUE             1      7.25 1081.69 -18627
++ ORGINAL_COMBINED_LOAN_TO_VALUE     1      6.76 1082.18 -18623
++ PROPERTY_TYPE                      5      4.85 1084.09 -18599
++ CHANNEL                            2      2.82 1086.13 -18589
++ NUMBER_OF_BORROWERS                1      0.35 1088.59 -18570
+<none>                                           1088.95 -18570
++ MSA                                1      0.18 1088.76 -18569
++ POSTAL_CODE                        1      0.08 1088.86 -18568
++ MORTAGAGE_INSURANCE_PERCENTAGE     1      0.01 1088.93 -18568
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1      0.01 1088.94 -18568
+- ORIGINAL_LOAN_TERM                 1    675.43 1764.37 -14296
+
+Step:  AIC=-20145.64
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS
+
+                                    Df Sum of Sq     RSS    AIC
++ CREDIT_SCORE                     213    161.76  749.31 -21452
++ LOAN_PURPOSE                       2     48.01  863.07 -20621
++ SERVICER_NAME                     18     37.65  873.42 -20484
++ MATURITY_DATE                      1     28.17  882.90 -20422
++ FIRST_PAYMENT_DATE                 1     27.93  883.15 -20420
++ ORIGINAL_UPB                       1     24.58  886.49 -20386
++ SUPER_CONFORMING_FLAG             18     26.67  884.40 -20373
++ SELLER_NAME                       17     26.22  884.86 -20370
++ ORGINAL_COMBINED_LOAN_TO_VALUE     1     16.64  894.44 -20307
++ ORIGINAL_LOAN_TO_VALUE             1     16.57  894.51 -20306
++ PROPERTY_STATE                    51     25.35  885.72 -20294
++ FIRST_TIME_HOMEBUYER_FLAG          2      5.91  905.16 -20199
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1      5.64  905.43 -20199
++ MORTAGAGE_INSURANCE_PERCENTAGE     1      5.48  905.60 -20197
++ CHANNEL                            2      4.51  906.56 -20186
++ PROPERTY_TYPE                      5      3.30  907.78 -20168
++ NUMBER_OF_UNITS                    1      1.49  909.58 -20158
++ NUMBER_OF_BORROWERS                1      0.24  910.84 -20146
+<none>                                            911.07 -20146
++ POSTAL_CODE                        1      0.09  910.99 -20145
++ MSA                                1      0.07  911.00 -20144
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1      0.00  911.07 -20144
+- OCCUPANCY_STATUS                   2    177.87 1088.95 -18570
+- ORIGINAL_LOAN_TERM                 1    679.47 1590.54 -15211
+
+Step:  AIC=-21451.51
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE
+
+                                    Df Sum of Sq     RSS    AIC
++ LOAN_PURPOSE                       2     31.16  718.15 -21824
++ MATURITY_DATE                      1     24.11  725.20 -21739
++ FIRST_PAYMENT_DATE                 1     23.59  725.72 -21733
++ SERVICER_NAME                     18     25.66  723.65 -21724
++ ORIGINAL_UPB                       1     16.51  732.80 -21647
++ SELLER_NAME                       17     18.85  730.46 -21643
++ ORGINAL_COMBINED_LOAN_TO_VALUE     1     15.67  733.64 -21637
++ ORIGINAL_LOAN_TO_VALUE             1     15.49  733.82 -21635
++ SUPER_CONFORMING_FLAG             18     16.45  732.86 -21612
++ PROPERTY_STATE                    51     17.66  731.65 -21561
++ MORTAGAGE_INSURANCE_PERCENTAGE     1      6.36  742.95 -21525
++ CHANNEL                            2      3.38  745.93 -21488
++ FIRST_TIME_HOMEBUYER_FLAG          2      3.21  746.10 -21486
++ PROPERTY_TYPE                      5      2.62  746.69 -21473
++ NUMBER_OF_UNITS                    1      1.20  748.11 -21464
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1      1.20  748.11 -21464
++ NUMBER_OF_BORROWERS                1      0.74  748.57 -21458
+<none>                                            749.31 -21452
++ POSTAL_CODE                        1      0.09  749.22 -21451
++ MSA                                1      0.03  749.28 -21450
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1      0.01  749.30 -21450
+- CREDIT_SCORE                     213    161.76  911.07 -20146
+- OCCUPANCY_STATUS                   2    188.66  937.97 -19466
+- ORIGINAL_LOAN_TERM                 1    641.87 1391.18 -15971
+
+Step:  AIC=-21823.88
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE
+
+                                    Df Sum of Sq     RSS    AIC
++ ORGINAL_COMBINED_LOAN_TO_VALUE     1     28.92  689.22 -22186
++ ORIGINAL_LOAN_TO_VALUE             1     27.72  690.43 -22171
++ MATURITY_DATE                      1     22.52  695.62 -22104
++ FIRST_PAYMENT_DATE                 1     21.81  696.34 -22095
++ SERVICER_NAME                     18     22.97  695.17 -22076
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     15.27  702.88 -22012
++ SELLER_NAME                       17     16.64  701.51 -21998
++ ORIGINAL_UPB                       1     13.67  704.48 -21992
++ SUPER_CONFORMING_FLAG             18     16.15  702.00 -21989
++ PROPERTY_STATE                    51     16.43  701.72 -21927
++ FIRST_TIME_HOMEBUYER_FLAG          2      2.87  715.28 -21855
++ CHANNEL                            2      2.61  715.54 -21852
++ PROPERTY_TYPE                      5      3.03  715.12 -21851
++ NUMBER_OF_UNITS                    1      1.28  716.87 -21838
++ NUMBER_OF_BORROWERS                1      0.93  717.22 -21833
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1      0.79  717.36 -21832
++ POSTAL_CODE                        1      0.18  717.97 -21824
+<none>                                            718.15 -21824
++ MSA                                1      0.05  718.10 -21822
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1      0.03  718.12 -21822
+- LOAN_PURPOSE                       2     31.16  749.31 -21452
+- CREDIT_SCORE                     213    144.92  863.07 -20621
+- OCCUPANCY_STATUS                   2    177.87  896.01 -19867
+- ORIGINAL_LOAN_TERM                 1    595.32 1313.47 -16477
+
+Step:  AIC=-22186.1
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE
+
+                                    Df Sum of Sq     RSS    AIC
++ MATURITY_DATE                      1     22.60  666.63 -22479
++ FIRST_PAYMENT_DATE                 1     22.12  667.11 -22473
++ SERVICER_NAME                     18     19.92  669.30 -22410
++ ORIGINAL_UPB                       1     15.13  674.10 -22381
++ SELLER_NAME                       17     14.17  675.05 -22336
++ SUPER_CONFORMING_FLAG             18     14.23  674.99 -22335
++ PROPERTY_STATE                    51     15.31  673.91 -22283
++ PROPERTY_TYPE                      5      3.35  685.88 -22219
++ FIRST_TIME_HOMEBUYER_FLAG          2      2.34  686.89 -22212
++ CHANNEL                            2      2.27  686.96 -22211
++ NUMBER_OF_UNITS                    1      1.91  687.31 -22209
++ MORTAGAGE_INSURANCE_PERCENTAGE     1      1.74  687.49 -22206
++ NUMBER_OF_BORROWERS                1      0.62  688.60 -22192
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1      0.58  688.65 -22192
+<none>                                            689.22 -22186
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1      0.02  689.20 -22184
++ ORIGINAL_LOAN_TO_VALUE             1      0.01  689.22 -22184
++ MSA                                1      0.00  689.22 -22184
++ POSTAL_CODE                        1      0.00  689.22 -22184
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1     28.92  718.15 -21824
+- LOAN_PURPOSE                       2     44.42  733.64 -21637
+- CREDIT_SCORE                     213    140.72  829.94 -20966
+- OCCUPANCY_STATUS                   2    191.84  881.06 -20014
+- ORIGINAL_LOAN_TERM                 1    537.68 1226.90 -17079
+
+Step:  AIC=-22479.44
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE
+
+                                    Df Sum of Sq    RSS    AIC
++ SERVICER_NAME                     18    19.422 647.21 -22705
++ ORIGINAL_UPB                       1    13.874 652.75 -22664
++ SELLER_NAME                       17    13.909 652.72 -22632
++ SUPER_CONFORMING_FLAG             18    13.398 653.23 -22623
++ PROPERTY_STATE                    51    14.138 652.49 -22567
++ FIRST_PAYMENT_DATE                 1     4.773 661.85 -22541
++ PROPERTY_TYPE                      5     3.251 663.38 -22513
++ FIRST_TIME_HOMEBUYER_FLAG          2     2.272 664.36 -22506
++ CHANNEL                            2     2.199 664.43 -22505
++ NUMBER_OF_UNITS                    1     1.916 664.71 -22503
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     1.742 664.89 -22501
++ NUMBER_OF_BORROWERS                1     0.523 666.10 -22484
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.488 666.14 -22484
+<none>                                           666.63 -22479
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.019 666.61 -22478
++ ORIGINAL_LOAN_TO_VALUE             1     0.006 666.62 -22478
++ POSTAL_CODE                        1     0.004 666.62 -22478
++ MSA                                1     0.000 666.63 -22477
+- MATURITY_DATE                      1    22.596 689.22 -22186
+- ORIGINAL_LOAN_TERM                 1    23.364 689.99 -22176
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    28.997 695.62 -22104
+- LOAN_PURPOSE                       2    42.961 709.59 -21930
+- CREDIT_SCORE                     213   137.634 804.26 -21243
+- OCCUPANCY_STATUS                   2   188.542 855.17 -20277
+
+Step:  AIC=-22705.41
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME
+
+                                    Df Sum of Sq    RSS    AIC
++ ORIGINAL_UPB                       1    15.510 631.70 -22918
++ SUPER_CONFORMING_FLAG             15    12.458 634.75 -22848
++ FIRST_PAYMENT_DATE                 1     4.708 642.50 -22768
++ PROPERTY_STATE                    51    11.820 635.39 -22767
++ PROPERTY_TYPE                      5     3.772 643.43 -22747
++ SELLER_NAME                        9     4.051 643.16 -22743
++ NUMBER_OF_UNITS                    1     2.007 645.20 -22731
++ FIRST_TIME_HOMEBUYER_FLAG          2     1.963 645.24 -22728
++ CHANNEL                            2     1.926 645.28 -22728
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     1.587 645.62 -22725
++ NUMBER_OF_BORROWERS                1     0.467 646.74 -22710
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.291 646.91 -22707
+<none>                                           647.21 -22705
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.026 647.18 -22704
++ ORIGINAL_LOAN_TO_VALUE             1     0.012 647.19 -22704
++ POSTAL_CODE                        1     0.004 647.20 -22704
++ MSA                                1     0.003 647.20 -22703
+- SERVICER_NAME                     18    19.422 666.63 -22479
+- MATURITY_DATE                      1    22.096 669.30 -22410
+- ORIGINAL_LOAN_TERM                 1    22.853 670.06 -22400
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    25.987 673.19 -22359
+- LOAN_PURPOSE                       2    37.977 685.18 -22204
+- CREDIT_SCORE                     213   128.738 775.94 -21524
+- OCCUPANCY_STATUS                   2   187.262 834.47 -20458
+
+Step:  AIC=-22918.32
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB
+
+                                    Df Sum of Sq    RSS    AIC
++ SUPER_CONFORMING_FLAG             15    21.131 610.56 -23190
++ PROPERTY_STATE                    51    12.632 619.06 -22995
++ FIRST_PAYMENT_DATE                 1     4.193 627.50 -22975
++ NUMBER_OF_UNITS                    1     3.448 628.25 -22965
++ SELLER_NAME                        9     3.599 628.10 -22951
++ PROPERTY_TYPE                      5     2.971 628.72 -22950
++ FIRST_TIME_HOMEBUYER_FLAG          2     1.455 630.24 -22935
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     0.934 630.76 -22929
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.928 630.77 -22929
++ CHANNEL                            2     0.916 630.78 -22927
++ ORIGINAL_LOAN_TO_VALUE             1     0.449 631.25 -22923
++ POSTAL_CODE                        1     0.288 631.41 -22920
++ MSA                                1     0.180 631.52 -22919
+<none>                                           631.70 -22918
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.018 631.68 -22917
++ NUMBER_OF_BORROWERS                1     0.018 631.68 -22917
+- ORIGINAL_UPB                       1    15.510 647.21 -22705
+- SERVICER_NAME                     18    21.058 652.75 -22664
+- MATURITY_DATE                      1    20.750 652.45 -22634
+- ORIGINAL_LOAN_TERM                 1    21.506 653.20 -22624
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    27.512 659.21 -22543
+- LOAN_PURPOSE                       2    36.205 667.90 -22429
+- CREDIT_SCORE                     213   120.892 752.59 -21793
+- OCCUPANCY_STATUS                   2   173.460 805.16 -20773
+
+Step:  AIC=-23189.77
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG
+
+                                    Df Sum of Sq    RSS    AIC
++ PROPERTY_STATE                    51    12.473 598.09 -23271
++ FIRST_PAYMENT_DATE                 1     3.753 606.81 -23242
++ NUMBER_OF_UNITS                    1     3.600 606.96 -23240
++ PROPERTY_TYPE                      5     2.765 607.80 -23220
++ FIRST_TIME_HOMEBUYER_FLAG          2     1.154 609.41 -23203
++ SELLER_NAME                        6     1.661 608.90 -23202
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.927 609.64 -23201
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     0.834 609.73 -23200
++ CHANNEL                            2     0.922 609.64 -23199
++ ORIGINAL_LOAN_TO_VALUE             1     0.610 609.96 -23197
++ POSTAL_CODE                        1     0.236 610.33 -23191
+<none>                                           610.56 -23190
++ MSA                                1     0.085 610.48 -23189
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.003 610.56 -23188
++ NUMBER_OF_BORROWERS                1     0.001 610.56 -23188
+- SERVICER_NAME                     15    20.027 630.59 -22934
+- SUPER_CONFORMING_FLAG             15    21.131 631.70 -22918
+- MATURITY_DATE                      1    19.396 629.96 -22915
+- ORIGINAL_LOAN_TERM                 1    20.128 630.69 -22904
+- ORIGINAL_UPB                       1    24.183 634.75 -22848
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    27.925 638.49 -22796
+- LOAN_PURPOSE                       2    35.919 646.48 -22687
+- CREDIT_SCORE                     213   113.780 724.35 -22102
+- OCCUPANCY_STATUS                   2   166.051 776.62 -21062
+
+Step:  AIC=-23270.64
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE
+
+                                    Df Sum of Sq    RSS    AIC
++ NUMBER_OF_UNITS                    1     3.993 594.10 -23328
++ FIRST_PAYMENT_DATE                 1     3.758 594.33 -23325
++ PROPERTY_TYPE                      5     2.323 595.77 -23295
++ SELLER_NAME                        6     1.693 596.40 -23284
++ FIRST_TIME_HOMEBUYER_FLAG          2     1.078 597.01 -23283
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     0.902 597.19 -23282
++ CHANNEL                            2     1.016 597.08 -23282
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.616 597.48 -23278
++ ORIGINAL_LOAN_TO_VALUE             1     0.583 597.51 -23277
+<none>                                           598.09 -23271
++ NUMBER_OF_BORROWERS                1     0.063 598.03 -23270
++ POSTAL_CODE                        1     0.041 598.05 -23269
++ MSA                                1     0.019 598.07 -23269
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.000 598.09 -23269
+- PROPERTY_STATE                    51    12.473 610.56 -23190
+- SERVICER_NAME                     15    16.489 614.58 -23060
+- MATURITY_DATE                      1    18.222 616.31 -23007
+- ORIGINAL_LOAN_TERM                 1    18.922 617.01 -22997
+- SUPER_CONFORMING_FLAG             15    20.972 619.06 -22995
+- ORIGINAL_UPB                       1    23.960 622.05 -22925
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    29.846 627.94 -22841
+- LOAN_PURPOSE                       2    34.428 632.52 -22779
+- CREDIT_SCORE                     213   109.916 708.01 -22202
+- OCCUPANCY_STATUS                   2   160.407 758.50 -21170
+
+Step:  AIC=-23327.99
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS
+
+                                    Df Sum of Sq    RSS    AIC
++ FIRST_PAYMENT_DATE                 1     3.714 590.39 -23382
++ PROPERTY_TYPE                      5     2.349 591.75 -23353
++ SELLER_NAME                        6     1.706 592.39 -23342
++ FIRST_TIME_HOMEBUYER_FLAG          2     1.167 592.93 -23341
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     0.886 593.21 -23339
++ CHANNEL                            2     0.975 593.12 -23339
++ ORIGINAL_LOAN_TO_VALUE             1     0.655 593.44 -23336
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.611 593.49 -23335
+<none>                                           594.10 -23328
++ NUMBER_OF_BORROWERS                1     0.131 593.97 -23328
++ MSA                                1     0.030 594.07 -23326
++ POSTAL_CODE                        1     0.028 594.07 -23326
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.000 594.10 -23326
+- NUMBER_OF_UNITS                    1     3.993 598.09 -23271
+- PROPERTY_STATE                    51    12.866 606.96 -23240
+- SERVICER_NAME                     15    16.634 610.73 -23113
+- MATURITY_DATE                      1    18.177 612.28 -23063
+- ORIGINAL_LOAN_TERM                 1    18.874 612.97 -23053
+- SUPER_CONFORMING_FLAG             15    21.174 615.27 -23048
+- ORIGINAL_UPB                       1    26.031 620.13 -22950
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    31.037 625.14 -22879
+- LOAN_PURPOSE                       2    34.606 628.71 -22830
+- CREDIT_SCORE                     213   109.204 703.30 -22259
+- OCCUPANCY_STATUS                   2   135.513 729.61 -21512
+
+Step:  AIC=-23381.55
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS + FIRST_PAYMENT_DATE
+
+                                    Df Sum of Sq    RSS    AIC
++ PROPERTY_TYPE                      5     2.358 588.03 -23407
++ SELLER_NAME                        6     1.760 588.63 -23396
++ FIRST_TIME_HOMEBUYER_FLAG          2     1.171 589.21 -23395
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     0.901 589.48 -23393
++ CHANNEL                            2     1.008 589.38 -23393
++ ORIGINAL_LOAN_TO_VALUE             1     0.648 589.74 -23389
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.557 589.83 -23388
+<none>                                           590.39 -23382
++ NUMBER_OF_BORROWERS                1     0.130 590.26 -23382
++ POSTAL_CODE                        1     0.036 590.35 -23380
++ MSA                                1     0.025 590.36 -23380
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.000 590.38 -23380
+- FIRST_PAYMENT_DATE                 1     3.714 594.10 -23328
+- NUMBER_OF_UNITS                    1     3.949 594.33 -23325
+- MATURITY_DATE                      1     4.347 594.73 -23319
+- ORIGINAL_LOAN_TERM                 1     4.613 595.00 -23315
+- PROPERTY_STATE                    51    12.863 603.25 -23293
+- SERVICER_NAME                     15    16.465 606.85 -23168
+- SUPER_CONFORMING_FLAG             15    20.724 611.11 -23106
+- ORIGINAL_UPB                       1    25.330 615.72 -23011
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    31.081 621.47 -22929
+- LOAN_PURPOSE                       2    34.418 624.80 -22884
+- CREDIT_SCORE                     213   108.672 699.06 -22311
+- OCCUPANCY_STATUS                   2   135.188 725.57 -21559
+
+Step:  AIC=-23407
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS + FIRST_PAYMENT_DATE + PROPERTY_TYPE
+
+                                    Df Sum of Sq    RSS    AIC
++ SELLER_NAME                        6     1.735 586.29 -23421
++ FIRST_TIME_HOMEBUYER_FLAG          2     1.164 586.86 -23421
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     0.940 587.09 -23419
++ CHANNEL                            2     0.974 587.05 -23418
++ ORIGINAL_LOAN_TO_VALUE             1     0.649 587.38 -23415
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.533 587.49 -23413
++ NUMBER_OF_BORROWERS                1     0.142 587.89 -23407
+<none>                                           588.03 -23407
++ POSTAL_CODE                        1     0.020 588.01 -23405
++ MSA                                1     0.016 588.01 -23405
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.000 588.03 -23405
+- PROPERTY_TYPE                      5     2.358 590.39 -23382
+- FIRST_PAYMENT_DATE                 1     3.722 591.75 -23353
+- NUMBER_OF_UNITS                    1     3.969 592.00 -23349
+- MATURITY_DATE                      1     4.336 592.36 -23344
+- ORIGINAL_LOAN_TERM                 1     4.602 592.63 -23340
+- PROPERTY_STATE                    51    12.288 600.32 -23326
+- SERVICER_NAME                     15    16.924 604.95 -23186
+- SUPER_CONFORMING_FLAG             15    20.491 608.52 -23134
+- ORIGINAL_UPB                       1    22.891 610.92 -23071
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    30.620 618.65 -22959
+- LOAN_PURPOSE                       2    34.620 622.65 -22904
+- CREDIT_SCORE                     213   108.532 696.56 -22332
+- OCCUPANCY_STATUS                   2   135.256 723.28 -21577
+
+Step:  AIC=-23421.18
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS + FIRST_PAYMENT_DATE + PROPERTY_TYPE + 
+    SELLER_NAME
+
+                                    Df Sum of Sq    RSS    AIC
++ FIRST_TIME_HOMEBUYER_FLAG          2     1.136 585.16 -23434
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     0.921 585.37 -23433
++ CHANNEL                            2     0.778 585.51 -23429
++ ORIGINAL_LOAN_TO_VALUE             1     0.642 585.65 -23429
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.522 585.77 -23427
++ NUMBER_OF_BORROWERS                1     0.148 586.14 -23421
+<none>                                           586.29 -23421
++ POSTAL_CODE                        1     0.015 586.28 -23419
++ MSA                                1     0.013 586.28 -23419
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.001 586.29 -23419
+- SELLER_NAME                        6     1.735 588.03 -23407
+- PROPERTY_TYPE                      5     2.333 588.63 -23396
+- FIRST_PAYMENT_DATE                 1     3.775 590.07 -23366
+- NUMBER_OF_UNITS                    1     3.977 590.27 -23363
+- MATURITY_DATE                      1     4.359 590.65 -23358
+- ORIGINAL_LOAN_TERM                 1     4.626 590.92 -23354
+- PROPERTY_STATE                    51    12.313 598.61 -23339
+- SERVICER_NAME                      8     8.923 595.22 -23303
+- SUPER_CONFORMING_FLAG             12    18.634 604.93 -23168
+- ORIGINAL_UPB                       1    22.400 608.69 -23091
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    30.375 616.67 -22976
+- LOAN_PURPOSE                       2    33.920 620.21 -22927
+- CREDIT_SCORE                     213   108.266 694.56 -22346
+- OCCUPANCY_STATUS                   2   135.284 721.58 -21586
+
+Step:  AIC=-23434.36
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS + FIRST_PAYMENT_DATE + PROPERTY_TYPE + 
+    SELLER_NAME + FIRST_TIME_HOMEBUYER_FLAG
+
+                                    Df Sum of Sq    RSS    AIC
++ MORTAGAGE_INSURANCE_PERCENTAGE     1     1.323 583.83 -23452
++ ORIGINAL_LOAN_TO_VALUE             1     0.649 584.51 -23442
++ CHANNEL                            2     0.752 584.41 -23442
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.595 584.56 -23441
++ NUMBER_OF_BORROWERS                1     0.141 585.02 -23435
+<none>                                           585.16 -23434
++ MSA                                1     0.016 585.14 -23433
++ POSTAL_CODE                        1     0.013 585.14 -23433
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.001 585.16 -23432
+- FIRST_TIME_HOMEBUYER_FLAG          2     1.136 586.29 -23421
+- SELLER_NAME                        6     1.706 586.86 -23421
+- PROPERTY_TYPE                      5     2.328 587.49 -23409
+- FIRST_PAYMENT_DATE                 1     3.776 588.93 -23379
+- NUMBER_OF_UNITS                    1     4.076 589.23 -23375
+- MATURITY_DATE                      1     4.358 589.51 -23371
+- ORIGINAL_LOAN_TERM                 1     4.625 589.78 -23367
+- PROPERTY_STATE                    51    12.213 597.37 -23353
+- SERVICER_NAME                      8     8.910 594.07 -23317
+- SUPER_CONFORMING_FLAG             12    18.412 603.57 -23184
+- ORIGINAL_UPB                       1    21.785 606.94 -23113
+- LOAN_PURPOSE                       2    27.146 612.30 -23037
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    30.105 615.26 -22992
+- CREDIT_SCORE                     213   108.244 693.40 -22357
+- OCCUPANCY_STATUS                   2    89.500 674.66 -22177
+
+Step:  AIC=-23452.41
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS + FIRST_PAYMENT_DATE + PROPERTY_TYPE + 
+    SELLER_NAME + FIRST_TIME_HOMEBUYER_FLAG + MORTAGAGE_INSURANCE_PERCENTAGE
+
+                                    Df Sum of Sq    RSS    AIC
++ ORIGINAL_LOAN_TO_VALUE             1     0.981 582.85 -23465
++ CHANNEL                            2     0.764 583.07 -23460
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.555 583.28 -23459
++ NUMBER_OF_BORROWERS                1     0.133 583.70 -23452
+<none>                                           583.83 -23452
++ MSA                                1     0.014 583.82 -23451
++ POSTAL_CODE                        1     0.011 583.82 -23451
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.003 583.83 -23451
+- SELLER_NAME                        6     1.680 585.51 -23439
+- MORTAGAGE_INSURANCE_PERCENTAGE     1     1.323 585.16 -23434
+- FIRST_TIME_HOMEBUYER_FLAG          2     1.538 585.37 -23433
+- PROPERTY_TYPE                      5     2.374 586.21 -23427
+- FIRST_PAYMENT_DATE                 1     3.794 587.63 -23397
+- NUMBER_OF_UNITS                    1     4.085 587.92 -23393
+- MATURITY_DATE                      1     4.353 588.19 -23389
+- ORIGINAL_LOAN_TERM                 1     4.619 588.45 -23385
+- PROPERTY_STATE                    51    12.306 596.14 -23370
+- SERVICER_NAME                      8     8.859 592.69 -23335
+- SUPER_CONFORMING_FLAG             12    18.284 602.12 -23203
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1    17.476 601.31 -23193
+- ORIGINAL_UPB                       1    20.963 604.80 -23142
+- LOAN_PURPOSE                       2    28.083 611.92 -23040
+- CREDIT_SCORE                     213   108.782 692.62 -22365
+- OCCUPANCY_STATUS                   2    89.852 673.69 -22188
+
+Step:  AIC=-23465.32
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS + FIRST_PAYMENT_DATE + PROPERTY_TYPE + 
+    SELLER_NAME + FIRST_TIME_HOMEBUYER_FLAG + MORTAGAGE_INSURANCE_PERCENTAGE + 
+    ORIGINAL_LOAN_TO_VALUE
+
+                                    Df Sum of Sq    RSS    AIC
++ CHANNEL                            2     0.725 582.13 -23472
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.567 582.29 -23472
+<none>                                           582.85 -23465
++ NUMBER_OF_BORROWERS                1     0.115 582.74 -23465
++ MSA                                1     0.015 582.84 -23464
++ POSTAL_CODE                        1     0.013 582.84 -23464
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.003 582.85 -23463
+- ORIGINAL_LOAN_TO_VALUE             1     0.981 583.83 -23452
+- SELLER_NAME                        6     1.668 584.52 -23452
+- FIRST_TIME_HOMEBUYER_FLAG          2     1.605 584.46 -23445
+- MORTAGAGE_INSURANCE_PERCENTAGE     1     1.656 584.51 -23442
+- PROPERTY_TYPE                      5     2.385 585.24 -23439
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1     3.697 586.55 -23411
+- FIRST_PAYMENT_DATE                 1     3.786 586.64 -23410
+- NUMBER_OF_UNITS                    1     4.183 587.04 -23404
+- MATURITY_DATE                      1     4.340 587.19 -23402
+- ORIGINAL_LOAN_TERM                 1     4.606 587.46 -23398
+- PROPERTY_STATE                    51    12.241 595.09 -23383
+- SERVICER_NAME                      8     8.773 591.63 -23349
+- SUPER_CONFORMING_FLAG             12    18.414 601.27 -23214
+- ORIGINAL_UPB                       1    21.790 604.64 -23142
+- LOAN_PURPOSE                       2    28.695 611.55 -23044
+- CREDIT_SCORE                     213   108.596 691.45 -22378
+- OCCUPANCY_STATUS                   2    89.917 672.77 -22198
+
+Step:  AIC=-23472.34
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS + FIRST_PAYMENT_DATE + PROPERTY_TYPE + 
+    SELLER_NAME + FIRST_TIME_HOMEBUYER_FLAG + MORTAGAGE_INSURANCE_PERCENTAGE + 
+    ORIGINAL_LOAN_TO_VALUE + CHANNEL
+
+                                    Df Sum of Sq    RSS    AIC
++ ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.568 581.56 -23479
+<none>                                           582.13 -23472
++ NUMBER_OF_BORROWERS                1     0.107 582.02 -23472
++ MSA                                1     0.014 582.11 -23471
++ POSTAL_CODE                        1     0.013 582.12 -23471
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.002 582.13 -23470
+- CHANNEL                            2     0.725 582.85 -23465
+- SELLER_NAME                        6     1.459 583.59 -23462
+- ORIGINAL_LOAN_TO_VALUE             1     0.942 583.07 -23460
+- FIRST_TIME_HOMEBUYER_FLAG          2     1.570 583.70 -23453
+- MORTAGAGE_INSURANCE_PERCENTAGE     1     1.662 583.79 -23449
+- PROPERTY_TYPE                      5     2.356 584.48 -23447
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1     3.614 585.74 -23420
+- FIRST_PAYMENT_DATE                 1     3.816 585.94 -23417
+- NUMBER_OF_UNITS                    1     4.150 586.28 -23411
+- MATURITY_DATE                      1     4.355 586.48 -23408
+- ORIGINAL_LOAN_TERM                 1     4.622 586.75 -23404
+- PROPERTY_STATE                    51    12.318 594.45 -23389
+- SERVICER_NAME                      8     8.486 590.61 -23360
+- SUPER_CONFORMING_FLAG             12    18.524 600.65 -23219
+- ORIGINAL_UPB                       1    21.422 603.55 -23154
+- LOAN_PURPOSE                       2    28.417 610.54 -23054
+- CREDIT_SCORE                     213   108.422 690.55 -22385
+- OCCUPANCY_STATUS                   2    90.250 672.38 -22199
+
+Step:  AIC=-23478.98
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS + FIRST_PAYMENT_DATE + PROPERTY_TYPE + 
+    SELLER_NAME + FIRST_TIME_HOMEBUYER_FLAG + MORTAGAGE_INSURANCE_PERCENTAGE + 
+    ORIGINAL_LOAN_TO_VALUE + CHANNEL + ORIGINAL_DEBT_TO_INCOME_RATIO
+
+                                    Df Sum of Sq    RSS    AIC
++ NUMBER_OF_BORROWERS                1     0.157 581.40 -23479
+<none>                                           581.56 -23479
++ MSA                                1     0.012 581.55 -23477
++ POSTAL_CODE                        1     0.007 581.55 -23477
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.002 581.56 -23477
+- ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.568 582.13 -23472
+- CHANNEL                            2     0.725 582.29 -23472
+- SELLER_NAME                        6     1.449 583.01 -23469
+- ORIGINAL_LOAN_TO_VALUE             1     0.953 582.51 -23467
+- FIRST_TIME_HOMEBUYER_FLAG          2     1.642 583.20 -23458
+- MORTAGAGE_INSURANCE_PERCENTAGE     1     1.620 583.18 -23456
+- PROPERTY_TYPE                      5     2.329 583.89 -23454
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1     3.613 585.17 -23426
+- FIRST_PAYMENT_DATE                 1     3.759 585.32 -23424
+- NUMBER_OF_UNITS                    1     4.142 585.70 -23418
+- MATURITY_DATE                      1     4.357 585.92 -23415
+- ORIGINAL_LOAN_TERM                 1     4.623 586.18 -23411
+- PROPERTY_STATE                    51    12.008 593.57 -23400
+- SERVICER_NAME                      8     8.451 590.01 -23367
+- SUPER_CONFORMING_FLAG             12    18.535 600.10 -23225
+- ORIGINAL_UPB                       1    21.691 603.25 -23157
+- LOAN_PURPOSE                       2    27.970 609.53 -23067
+- CREDIT_SCORE                     213   106.231 687.79 -22419
+- OCCUPANCY_STATUS                   2    89.592 671.15 -22214
+
+Step:  AIC=-23479.37
+ORIGINAL_INTEREST_RATE ~ ORIGINAL_LOAN_TERM + OCCUPANCY_STATUS + 
+    CREDIT_SCORE + LOAN_PURPOSE + ORGINAL_COMBINED_LOAN_TO_VALUE + 
+    MATURITY_DATE + SERVICER_NAME + ORIGINAL_UPB + SUPER_CONFORMING_FLAG + 
+    PROPERTY_STATE + NUMBER_OF_UNITS + FIRST_PAYMENT_DATE + PROPERTY_TYPE + 
+    SELLER_NAME + FIRST_TIME_HOMEBUYER_FLAG + MORTAGAGE_INSURANCE_PERCENTAGE + 
+    ORIGINAL_LOAN_TO_VALUE + CHANNEL + ORIGINAL_DEBT_TO_INCOME_RATIO + 
+    NUMBER_OF_BORROWERS
+
+                                    Df Sum of Sq    RSS    AIC
+<none>                                           581.40 -23479
+- NUMBER_OF_BORROWERS                1     0.157 581.56 -23479
++ MSA                                1     0.010 581.39 -23478
++ POSTAL_CODE                        1     0.009 581.39 -23478
++ PREPAYMENT_PENALTY_MORTGAGE_FLAG   1     0.003 581.40 -23477
+- CHANNEL                            2     0.716 582.12 -23473
+- ORIGINAL_DEBT_TO_INCOME_RATIO      1     0.617 582.02 -23472
+- SELLER_NAME                        6     1.454 582.86 -23469
+- ORIGINAL_LOAN_TO_VALUE             1     0.934 582.34 -23467
+- FIRST_TIME_HOMEBUYER_FLAG          2     1.634 583.04 -23459
+- MORTAGAGE_INSURANCE_PERCENTAGE     1     1.603 583.01 -23457
+- PROPERTY_TYPE                      5     2.341 583.74 -23454
+- ORGINAL_COMBINED_LOAN_TO_VALUE     1     3.597 585.00 -23427
+- FIRST_PAYMENT_DATE                 1     3.754 585.16 -23424
+- NUMBER_OF_UNITS                    1     4.221 585.62 -23417
+- MATURITY_DATE                      1     4.367 585.77 -23415
+- ORIGINAL_LOAN_TERM                 1     4.634 586.04 -23411
+- PROPERTY_STATE                    51    12.123 593.53 -23399
+- SERVICER_NAME                      8     8.441 589.84 -23368
+- SUPER_CONFORMING_FLAG             12    18.616 600.02 -23224
+- ORIGINAL_UPB                       1    21.728 603.13 -23156
+- LOAN_PURPOSE                       2    27.795 609.20 -23070
+- CREDIT_SCORE                     213   105.545 686.95 -22427
+- OCCUPANCY_STATUS                   2    89.507 670.91 -22215
+There were 42 warnings (use warnings() to see them)
