@@ -8,6 +8,8 @@ from sklearn.preprocessing import StandardScaler
 #pip install scikit-neuralnetwork 
 #conda update scikit-learn
 from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 """dataset=pd.DataFrame("historical_data1_Q12005.csv")
 print(dataset.head(10))
@@ -86,33 +88,65 @@ X_test  = transformed_df.data[-20:]
 Y_train = transformed_df.Original_interest_rate.target[:-20]
 Y_test  = transformed_df.Original_interest_rate.target[-20:]
 
+model_number = input("Choose the model that you want to run:"
+                      "  A. Linear Regression "
+                      "  B. Neural Network "
+                      "  C. KNN"
+                      "  D. Random Forest")
 
-#linear regression model
-linear_reg = LinearRegression()
-linear_reg.fit(X_train, Y_train)
-print ("Intercept is ",linear_reg.intercept_)
-print("Coefficient is ",linear_reg.coef_)
-#print(lm.predict([18,3,0,4]))
-print("Training score is ",linear_reg.score(X_train, Y_train))
+if model_number == "A":
+        #linear regression model
+        print("Starting Linear Regression algorithm")
+        linear_reg = LinearRegression()
+        linear_reg.fit(X_train, Y_train)
+        print ("Intercept is ",linear_reg.intercept_)
+        print("Coefficient is ",linear_reg.coef_)
+        #print(lm.predict([18,3,0,4]))
+        print("Training score is ",linear_reg.score(X_train, Y_train))
 
-np.mean((linear_reg.predict(X_test)-Y_test)**2)
-print("Testing score is ",linear_reg.score(X_test, Y_test))
+        np.mean((linear_reg.predict(X_test)-Y_test)**2)
+        print("Testing score is ",linear_reg.score(X_test, Y_test))
 
-#neural network
-scaler = StandardScaler()
-# Fit only to the training data
-scaler.fit(X_train)
-X_train = scaler.transform(X_train)
-X_test = scaler.transform(X_test)
+elif model_number == "B":
+        
+        #neural network
+        print("Staring Neural Network")
+        scaler = StandardScaler()
+        # Fit only to the training data
+        scaler.fit(X_train)
+        X_train = scaler.transform(X_train)
+        X_test = scaler.transform(X_test)
 
-neural_network_reg=MLPClassifier(hidden_layer_sizes=(20,10,20))
-neural_network_reg.fit(X_train,y_train)
-predictions = neural_network_reg.predict(X_test)
-print("Intercept is ",neural_network_reg.intercept_)
-print("Coefficient is ",neural_network_reg.coef_)
-print("Training score is ",neural_network_reg.score(X_train, Y_train))
-print("Testing score is ",neural_network_reg.score(X_test, Y_test))
+        neural_network_reg=MLPClassifier(hidden_layer_sizes=(20,10,20))
+        neural_network_reg.fit(X_train,y_train)
+        predictions = neural_network_reg.predict(X_test)
+        print("Intercept is ",neural_network_reg.intercept_)
+        print("Coefficient is ",neural_network_reg.coef_)
+        print("Training score is ",neural_network_reg.score(X_train, Y_train))
+        print("Testing score is ",neural_network_reg.score(X_test, Y_test))
 
+elif model_number == "C":
+        #KNN algorithm
+        print("Starting KNN algorithm")
+        for K in range(25):
+                 K_value = K+1
+                 knn_reg = KNeighborsClassifier(n_neighbors = K_value, weights='uniform', algorithm='auto')
+                 knn_reg.fit(X_train, Y_train) 
+                 y_pred = knn_reg.predict(X_test)
+                 print "Accuracy is ", accuracy_score(Y_test,Y_train)*100,"% for K-Value:",K_value
+
+elif model_number == "D":
+        print("Staring Random forest algorithm")
+        random_forest = RandomForestClassifier(n_jobs=2)
+        random_forest.fit(X_train, Y_train)
+        random_forest.predict(X_test)
+        #predict probability of first 10 records
+        print(random_forest.predict_proba(X_test)[0:10])
+        print "Accuracy is ", accuracy_score(Y_test,Y_train)*100,"% for job:",K_value     
+        
+else:
+        print("Running all four algorithms in parallel")
+        
 
 """
 # visualize the relationship between the features and the response using scatterplots
