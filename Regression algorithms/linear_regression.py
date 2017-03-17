@@ -14,6 +14,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.utils import check_array
 from sklearn.metrics import r2_score
+from sklearn.ensemble import RandomForestRegressor
 
 """dataset=pd.DataFrame("historical_data1_Q12005.csv")
 print(dataset.head(10))
@@ -162,12 +163,15 @@ elif model_number == "C":
 
 elif model_number == "D":
         print("Staring Random forest algorithm")
-        random_forest = RandomForestClassifier(n_jobs=2)
+        random_forest = RandomForestRegressor(n_jobs=2)
         random_forest.fit(X_train, Y_train)
-        random_forest.predict(X_test)
+        y_pred=random_forest.predict(X_test)
         #predict probability of first 10 records
-        print(random_forest.predict_proba(X_test)[0:10])
-        print ("Accuracy is ", accuracy_score(Y_test,Y_train)*100,"% for job:",n_jobs)     
+        #print(random_forest.predict_proba(X_test)[0:10])
+        print("Mean Absolute Error is ",mean_absolute_error(Y_train,y_pred))
+        #print("Mean Absolute Percentage Error is ",mean_absolute_percentage_error(Y_train,y_pred))
+        print("Root Mean Squared Error ",np.sqrt(mean_squared_error(Y_train,y_pred)))
+        print("Accuracy of the model is ",r2_score(Y_train,y_pred))     
         
 else:
         print("Running all four algorithms in parallel")
