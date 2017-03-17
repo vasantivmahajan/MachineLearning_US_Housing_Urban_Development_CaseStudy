@@ -13,6 +13,10 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score
+import warnings
+warnings.filterwarnings('ignore')
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.neighbors import KNeighborsRegressor
 """dataset=pd.DataFrame("historical_data1_Q12005.csv")
 print(dataset.head(10))
 
@@ -33,10 +37,11 @@ def dummyEncode(df):
         columnsToEncode = list(df.select_dtypes(include=['category','object']))
         le = LabelEncoder()
         for feature in columnsToEncode:
-            #try:
+            try:
+                
                 df[feature] = le.fit_transform(df[feature])
-            #except:
-                #print('Error encoding '+feature)
+            except:
+                print('Error encoding '+feature)
         return df
 
 def compute_coefficients(dataframe):
@@ -82,17 +87,29 @@ def compute_coefficients(dataframe):
 
 #load the dataframe
 dataframe = pd.read_csv("2005Q1.csv")
+
+dataframe['PREPAYMENT_PENALTY_MORTGAGE_FLAG'].astype(bool)
+dataframe['ORIGINAL_DEBT_TO_INCOME_RATIO']=dataframe['ORIGINAL_DEBT_TO_INCOME_RATIO'].convert_objects(convert_numeric=True)
+dataframe['MORTAGAGE_INSURANCE_PERCENTAGE']=dataframe['MORTAGAGE_INSURANCE_PERCENTAGE'].convert_objects(convert_numeric=True)
+dataframe['FIRST_TIME_HOMEBUYER_FLAG'].astype(bool)
+dataframe = dataframe.fillna(method='ffill')
 dataframe_quarter = pd.read_csv("2005Q2.csv")
+dataframe_quarter['PREPAYMENT_PENALTY_MORTGAGE_FLAG'].astype(bool)
+dataframe_quarter['FIRST_TIME_HOMEBUYER_FLAG'].astype(bool)
+dataframe_quarter['ORIGINAL_DEBT_TO_INCOME_RATIO']=dataframe_quarter['ORIGINAL_DEBT_TO_INCOME_RATIO'].convert_objects(convert_numeric=True)
+dataframe_quarter['MORTAGAGE_INSURANCE_PERCENTAGE']=dataframe_quarter['MORTAGAGE_INSURANCE_PERCENTAGE'].convert_objects(convert_numeric=True)
+dataframe_quarter = dataframe_quarter.fillna(method='ffill')
+#dataframe_quarter['ORIGINAL_DEBT_TO_INCOME_RATIO'].astype(float)
 #feature selection based on coefficient values
-feature_cols_dataframe=dataframe[["PROPERTY_STATE",'PROPERTY_TYPE',"LOAN_PURPOSE",'SERVICER_NAME','ORIGINAL_INTEREST_RATE','CREDIT_SCORE','ORGINAL_COMBINED_LOAN_TO_VALUE','ORIGINAL_DEBT_TO_INCOME_RATIO','ORIGINAL_LOAN_TO_VALUE','ORIGINAL_UPB','ORIGINAL_LOAN_TERM','NUMBER_OF_BORROWERS','SELLER_NAME','SERVICER_NAME','POSTAL_CODE','PREPAYMENT_PENALTY_MORTGAGE_FLAG','CHANNEL','OCCUPANCY_STATUS','NUMBER_OF_UNITS','MORTAGAGE_INSURANCE_PERCENTAGE','FIRST_TIME_HOMEBUYER_FLAG']]
+feature_cols_dataframe=dataframe[["PROPERTY_STATE",'PROPERTY_TYPE',"LOAN_PURPOSE",'ORIGINAL_INTEREST_RATE','CREDIT_SCORE','ORGINAL_COMBINED_LOAN_TO_VALUE','ORIGINAL_DEBT_TO_INCOME_RATIO','ORIGINAL_LOAN_TO_VALUE','ORIGINAL_UPB','ORIGINAL_LOAN_TERM','NUMBER_OF_BORROWERS','SELLER_NAME','SERVICER_NAME','POSTAL_CODE','CHANNEL','OCCUPANCY_STATUS','NUMBER_OF_UNITS','MORTAGAGE_INSURANCE_PERCENTAGE']]
 #feature_cols=["PROPERTY_STATE",'PROPERTY_TYPE',"LOAN_PURPOSE",'SERVICER_NAME','ORIGINAL_INTEREST_RATE']
 
 #transforming categorical/string data into numeric data for the algorithm
 #used custom encoding instead of one hot encoding for memory efficiency
 transformed_df=dummyEncode(feature_cols_dataframe)
-print(transformed_df.head(5))
+#print(transformed_df.head(5))
 transformed_df_next_quarter=dummyEncode(feature_cols_dataframe)
-print(transformed_df_next_quarter.head(5))
+#print(transformed_df_next_quarter.head(5))
 #X = transformed_df
 #y = transformed_df.Original_interest_rate
 
@@ -193,37 +210,33 @@ elif model_number =='B':
     print("Neural Network Root Mean Squared Error",np.sqrt(mean_squared_error(Y_train,y_pred)))
     print("Neural Network R2 Score of the model is ",r2_score(Y_train,y_pred))
 
-elif model_number =='C':
+elif model_number == "C":
         #KNN algorithm
         print("Starting KNN algorithm")
         for K in range(25):
                  K_value = K+1
-                 knn_reg = KNeighborsClassifier(n_neighbors = K_value, weights='uniform', algorithm='auto')
-                 knn_reg.fit(X_train, Y_train) 
+                 knn_reg = KNeighborsRegressor(n_neighbors = K_value, weights='uniform', algorithm='auto')
+                 knn_reg.fit(X_train, Y_train)
                  y_pred = knn_reg.predict(X_test)
-                 print ("Accuracy is ", accuracy_score(Y_test,Y_train)*100,"% for K-Value:",K_value)
+                 print("Mean Absolute Error is ",mean_absolute_error(Y_train,y_pred),"% for K-Value:",K_value)
+                 #print("Mean Absolute Percentage Error is ",mean_absolute_percentage_error(Y_train,y_pred))
+                 print("Root Mean Squared Error ",np.sqrt(mean_squared_error(Y_train,y_pred)))
+                 print("Accuracy of the model is ",r2_score(Y_train,y_pred))
 
-elif model_number=='D':
+elif model_number == "D":
         print("Staring Random forest algorithm")
-        random_forest = RandomForestClassifier(n_jobs=2)
+        random_forest = RandomForestRegressor(n_jobs=2)
         random_forest.fit(X_train, Y_train)
-        random_forest.predict(X_test)
+        y_pred=random_forest.predict(X_test)
         #predict probability of first 10 records
-        print(random_forest.predict_proba(X_test)[0:10])
-        print ("Accuracy is ", accuracy_score(Y_test,Y_train)*100,"% for job:",K_value )    
+        #print(random_forest.predict_proba(X_test)[0:10])
+        print("Mean Absolute Error is ",mean_absolute_error(Y_train,y_pred))
+        #print("Mean Absolute Percentage Error is ",mean_absolute_percentage_error(Y_train,y_pred))
+        print("Root Mean Squared Error ",np.sqrt(mean_squared_error(Y_train,y_pred)))
+        print("Accuracy of the model is ",r2_score(Y_train,y_pred))     
         
 else:
         print("Running all four algorithms in parallel")
         
 
-
-"""
-# visualize the relationship between the features and the response using scatterplots
-fig, axs = plt.subplots(1, 6, sharey=True)
-dataframe.plot(kind='scatter', x='Credit_score', y='Original_interest_rate', ax=axs[0], figsize=(16, 8))
-dataframe.plot(kind='scatter', x='Original_combined_loan-to-value', y='Original_interest_rate', ax=axs[1])
-dataframe.plot(kind='scatter', x='Original_debt_to_income_ratio', y='Original_interest_rate', ax=axs[2])
-
-dataframe.plot(kind='scatter', x='Unpaid_principal_balance', y='Original_interest_rate', ax=axs[3])
-dataframe.plot(kind='scatter', x='Original-loan-to-value', y='Original_interest_rate', ax=axs[4])
-dataframe.plot(kind='scatter', x='Property_state', y='Original_interest_rate', ax=axs[5])"""
+        
