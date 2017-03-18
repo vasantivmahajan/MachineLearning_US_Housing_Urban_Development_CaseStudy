@@ -5,8 +5,6 @@ import pandas as pd
 import statsmodels.formula.api as smf
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
-#pip install scikit-neuralnetwork 
-#conda update scikit-learn
 from sklearn.neural_network import MLPRegressor
 from sklearn.cross_validation import train_test_split, KFold, StratifiedShuffleSplit,StratifiedKFold
 from sklearn.metrics import mean_absolute_error
@@ -17,20 +15,8 @@ import warnings
 warnings.filterwarnings('ignore')
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
-"""dataset=pd.DataFrame("historical_data1_Q12005.csv")
-print(dataset.head(10))
+from sklearn import linear_model
 
-X_train = dataset.data[:-20]
-X_test  = dataset.data[-20:]
-Y_train = dataset.target[:-20]
-Y_test  = dataset.target[-20:]
-
-regr = linear_model.LinearRegression()
-
-regr.fit(X_train, Y_train)
-print(regr.coef_)
-np.mean((regr.predict(X_test)-Y_test)**2)
-regr.score(X_test, Y_test) """
 
 #using label encoder to convert categorical columns into numeric values
 def dummyEncode(df):
@@ -38,8 +24,10 @@ def dummyEncode(df):
         le = LabelEncoder()
         for feature in columnsToEncode:
             try:
-                
-                df[feature] = le.fit_transform(df[feature])
+                if feature!='ORIGINAL_INTEREST_RATE':
+                    df[feature] = le.fit_transform(df[feature])
+                else:
+                    df[feature] = df[feature] 
             except:
                 print('Error encoding '+feature)
         return df
@@ -93,15 +81,19 @@ dataframe['ORIGINAL_DEBT_TO_INCOME_RATIO']=dataframe['ORIGINAL_DEBT_TO_INCOME_RA
 dataframe['MORTAGAGE_INSURANCE_PERCENTAGE']=dataframe['MORTAGAGE_INSURANCE_PERCENTAGE'].convert_objects(convert_numeric=True)
 dataframe['FIRST_TIME_HOMEBUYER_FLAG'].astype(bool)
 dataframe = dataframe.fillna(method='ffill')
+#dataframe_rate_of_interest=dataframe['ORIGINAL_INTEREST_RATE'].astype('float')
+
 dataframe_quarter = pd.read_csv("2005Q2.csv")
 dataframe_quarter['PREPAYMENT_PENALTY_MORTGAGE_FLAG'].astype(bool)
 dataframe_quarter['FIRST_TIME_HOMEBUYER_FLAG'].astype(bool)
 dataframe_quarter['ORIGINAL_DEBT_TO_INCOME_RATIO']=dataframe_quarter['ORIGINAL_DEBT_TO_INCOME_RATIO'].convert_objects(convert_numeric=True)
 dataframe_quarter['MORTAGAGE_INSURANCE_PERCENTAGE']=dataframe_quarter['MORTAGAGE_INSURANCE_PERCENTAGE'].convert_objects(convert_numeric=True)
 dataframe_quarter = dataframe_quarter.fillna(method='ffill')
+#dataframe_quarter_rate_of_interest=dataframe_quarter['ORIGINAL_INTEREST_RATE'].astype('float')
 #dataframe_quarter['ORIGINAL_DEBT_TO_INCOME_RATIO'].astype(float)
 #feature selection based on coefficient values
-feature_cols_dataframe=dataframe[["PROPERTY_STATE",'PROPERTY_TYPE',"LOAN_PURPOSE",'ORIGINAL_INTEREST_RATE','CREDIT_SCORE','ORGINAL_COMBINED_LOAN_TO_VALUE','ORIGINAL_DEBT_TO_INCOME_RATIO','ORIGINAL_LOAN_TO_VALUE','ORIGINAL_UPB','ORIGINAL_LOAN_TERM','NUMBER_OF_BORROWERS','SELLER_NAME','SERVICER_NAME','POSTAL_CODE','CHANNEL','OCCUPANCY_STATUS','NUMBER_OF_UNITS','MORTAGAGE_INSURANCE_PERCENTAGE']]
+feature_cols_dataframe=dataframe[["PROPERTY_STATE",'PROPERTY_TYPE',"LOAN_PURPOSE",'CREDIT_SCORE','ORGINAL_COMBINED_LOAN_TO_VALUE','ORIGINAL_DEBT_TO_INCOME_RATIO','ORIGINAL_LOAN_TO_VALUE','ORIGINAL_UPB','ORIGINAL_LOAN_TERM','NUMBER_OF_BORROWERS','SELLER_NAME','SERVICER_NAME','POSTAL_CODE','CHANNEL','OCCUPANCY_STATUS','NUMBER_OF_UNITS','MORTAGAGE_INSURANCE_PERCENTAGE','ORIGINAL_INTEREST_RATE']]
+
 #feature_cols=["PROPERTY_STATE",'PROPERTY_TYPE',"LOAN_PURPOSE",'SERVICER_NAME','ORIGINAL_INTEREST_RATE']
 
 #transforming categorical/string data into numeric data for the algorithm
@@ -114,54 +106,18 @@ transformed_df_next_quarter=dummyEncode(feature_cols_dataframe)
 #y = transformed_df.Original_interest_rate
 
 #split the data for training and testing 
-# X_train = transformed_df.data[:-20]
-# X_test  = transformed_df.data[-20:]
-# Y_train = transformed_df.Original_interest_rate.target[:-20]
-# Y_test  = transformed_df.Original_interest_rate.target[-20:]
+
 X_train=transformed_df
 transformed_df['ORIGINAL_INTEREST_RATE']=transformed_df['ORIGINAL_INTEREST_RATE'].astype(float)
 
-Y_train=transformed_df.ORIGINAL_INTEREST_RATE
-
+Y_train=transformed_df['ORIGINAL_INTEREST_RATE']
+print(len(transformed_df_next_quarter))
 X_test=transformed_df_next_quarter
+
 transformed_df_next_quarter['ORIGINAL_INTEREST_RATE']=transformed_df_next_quarter['ORIGINAL_INTEREST_RATE'].astype(float)
-Y_test=transformed_df_next_quarter.ORIGINAL_INTEREST_RATE
+Y_test=transformed_df_next_quarter['ORIGINAL_INTEREST_RATE']
+print(len(Y_test))
 
-
-#linear regression model
-# linear_reg = LinearRegression()
-# linear_reg.fit(X_train, Y_train)
-# print ("Intercept is ",linear_reg.intercept_)
-# print("Coefficient is ",linear_reg.coef_)
-# #print(lm.predict([18,3,0,4]))
-# #print("Training score is ",linear_reg.score(X_train, Y_train))
-# y_pred=linear_reg.predict(X_test)-Y_test
-# #print("Testing score is ",linear_reg.score(X_test, Y_test))
-
-# print (" Linear regression Mean Absolute Error is ",mean_absolute_error(Y_train,y_pred)*100)
-# #print("Linear regression Mean Absolute Percentage Error is",mean_absolute_percentage_error(Y_train,y_pred))
-# print("Linear regression Root Mean Squared Error",np.sqrt(mean_squared_error(Y_train,y_pred)))
-# print("Linear regression R2 Score of the model is ",r2_score(Y_train,y_pred))
-
-# #neural network
-# scaler = StandardScaler()
-# # Fit only to the training data
-# scaler.fit(X_train)
-# X_train = scaler.transform(X_train)
-# X_test = scaler.transform(X_test)
-
-# neural_network_reg=MLPRegressor(hidden_layer_sizes=(20,10,20))
-# neural_network_reg.fit(X_train,Y_train)
-# predictions = neural_network_reg.predict(X_test)
-# y_pred=predictions
-# #print("Intercept is ",neural_network_reg.intercept_)
-# #print("Coefficient is ",neural_network_reg.coef_)
-# # print("Training score is ",neural_network_reg.score(X_train, Y_train))
-# # print("Testing score is ",neural_network_reg.score(X_test, Y_test))
-# print ("Neural Network Mean Absolute Error is ",mean_absolute_error(Y_train,y_pred)*100)
-# #print("Neural Network Mean Absolute Percentage Error is",mean_absolute_percentage_error(Y_train,y_pred))
-# print("Neural Network Root Mean Squared Error",np.sqrt(mean_squared_error(Y_train,y_pred)))
-# print("Neural Network R2 Score of the model is ",r2_score(Y_train,y_pred))
 
 
 
@@ -173,7 +129,7 @@ model_number = input("Choose the model that you want to run:"
 
 if model_number =='A':
     
-    linear_reg = LinearRegression()
+    linear_reg = linear_model.SGDRegressor(loss='epsilon_insensitive',penalty='elasticnet')
     linear_reg.fit(X_train, Y_train)
     print ("Intercept is ",linear_reg.intercept_)
     print("Coefficient is ",linear_reg.coef_)
