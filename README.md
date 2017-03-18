@@ -22,3 +22,8 @@ login_for_scraping.py
 loan-data-to-data-frame.ipynb
 Exploratory_Data_Analysis_Loan.ipynb
 Analysis_of_Loan_Data_2005_2012.ipynb
+
+
+#Models
+linear_regression.py
+classification.py
