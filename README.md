@@ -27,3 +27,10 @@ Regression_Algorithms.ipynb
 
 Report:
 Regression_Models_Analysis_Report
+
+
+# Classification:
+Classification.ipynb
+classification_confusion_matrix.py
+Report:
+Classification.docx
