@@ -2,3 +2,13 @@
 
 Tableau link
 https://10az.online.tableau.com/#/site/freddiemacloandataset/workbooks/1225968/views
+
+
+#Steps to run docker image
+docker pull jainpranj/team1-midterm
+
+docker run -ti jainpranj/team1-midterm 
+
+to run other files
+docker run -ti jainpranj/team1-midterm bash
+And run the specific python file from terminal
